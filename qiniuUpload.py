@@ -14,19 +14,23 @@ bucket_name = 'document'
 key = 'mytest.jpg'
 
 #上传文件到七牛后， 七牛将文件名和文件大小回调给业务服务器。
-policy={
- 'callbackUrl':'http://p8uwsq3zo.bkt.clouddn.com/callback.php',
- 'callbackBody':'filename=$(fname)&filesize=$(fsize)'
- }
+#policy={
+#        'callbackUrl':'http://p8uwsq3zo.bkt.clouddn.com/callback.php',
+#        'callbackBody':'filename=$(fname)&filesize=$(fsize)'
+#        }
 
-token = q.upload_token(bucket_name, key, 3600, policy)
+# token = q.upload_token(bucket_name, key, 3600, policy)
+token = q.upload_token(bucket_name, key, 3600)
 
-localfile = '/Users/lovekun/Desktop/aaa.jpg'
+# localfile = '/Users/lovekun/Desktop/aaa.jpg'
+localfile = 'C:\Users\qiuaikun\Downloads\mytest.jpg'
 
 ret, info = put_file(token, key, localfile)
 print(info)
-assert ret['key'] == key
-assert ret['hash'] == etag(localfile)
+print(ret)
+print("http://p8uwsq3zo.bkt.clouddn.com/" + key)
+# assert ret['key'] == key
+# assert ret['hash'] == etag(localfile)
 
 # http://p8uwsq3zo.bkt.clouddn.com/mytest.jpg
 
