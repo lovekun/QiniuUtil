@@ -2,12 +2,11 @@ from qiniu import Auth, put_file, etag
 import qiniu.config
 import sys
 
-def upload(localfile, key, bucket='document'):
-    # print(localfile)
-    # print(key)
-    access_key = 'vr70Yo2pV5Ffp0YbEgnMjSa_EPgvthnci_VxiRs0'
-    secret_key = 'Dx2X_tZg-wCekIbRjwRijf3_C9fmwC7heCkfae5v'
+domain = pf388se7v.bkt.clouddn.com
+access_key = 'vr70Yo2pV5Ffp0YbEgnMjSa_EPgvthnci_VxiRs0'
+secret_key = 'Dx2X_tZg-wCekIbRjwRijf3_C9fmwC7heCkfae5v'
 
+def upload(localfile, key, bucket='document'):
     q = Auth(access_key, secret_key)
     bucket_name = bucket
     key = key
@@ -18,7 +17,7 @@ def upload(localfile, key, bucket='document'):
 
     ret, info = put_file(token, key, localfile)
     if info.status_code == 200:
-        link = "http://p8uwsq3zo.bkt.clouddn.com/" + key
+        link = "http://" + domain + key
         return link
     else:
         return "upload error"
