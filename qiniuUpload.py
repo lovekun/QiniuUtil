@@ -1,36 +1,31 @@
-# -*- coding: utf-8 -*-
-# flake8: noqa
-
 from qiniu import Auth, put_file, etag
 import qiniu.config
+import sys
 
+domain = pf388se7v.bkt.clouddn.com
 access_key = 'vr70Yo2pV5Ffp0YbEgnMjSa_EPgvthnci_VxiRs0'
 secret_key = 'Dx2X_tZg-wCekIbRjwRijf3_C9fmwC7heCkfae5v'
 
-q = Auth(access_key, secret_key)
+def upload(localfile, key, bucket='document'):
+    q = Auth(access_key, secret_key)
+    bucket_name = bucket
+    key = key
 
-bucket_name = 'document'
+    token = q.upload_token(bucket_name, key, 3600)
 
-key = 'mytest.jpg'
+    localfile = localfile
 
-#上传文件到七牛后， 七牛将文件名和文件大小回调给业务服务器。
-#policy={
-#        'callbackUrl':'http://p8uwsq3zo.bkt.clouddn.com/callback.php',
-#        'callbackBody':'filename=$(fname)&filesize=$(fsize)'
-#        }
+    ret, info = put_file(token, key, localfile)
+    if info.status_code == 200:
+        link = "http://" + domain + key
+        return link
+    else:
+        return "upload error"
 
-# token = q.upload_token(bucket_name, key, 3600, policy)
-token = q.upload_token(bucket_name, key, 3600)
-
-# localfile = '/Users/lovekun/Desktop/aaa.jpg'
-localfile = 'C:\Users\qiuaikun\Downloads\mytest.jpg'
-
-ret, info = put_file(token, key, localfile)
-print(info)
-print(ret)
-print("http://p8uwsq3zo.bkt.clouddn.com/" + key)
-# assert ret['key'] == key
-# assert ret['hash'] == etag(localfile)
-
-# http://p8uwsq3zo.bkt.clouddn.com/mytest.jpg
-
+# arg1: file path
+# arg2: key
+# arg3: bucket name
+if __name__ == "__main__":
+    # link = upload('C:\Users\qiuaikun\Downloads\mytest.jpg', 'mytest.jpg')
+    link = upload(sys.argv[1], sys.argv[2])
+    print(link)

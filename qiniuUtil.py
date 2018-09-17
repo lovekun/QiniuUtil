@@ -22,6 +22,23 @@ def upload(localfile, key, bucket='document'):
     else:
         return "upload error"
 
+def queryList(bucket):
+    q = Auth(access_key, secret_key)
+    bucket = BucketManager(q)
+
+    # bucket_name = 'lovekun'
+    # 前缀
+    prefix = None
+    # 列举条目
+    limit = 10
+    # 列举出除'/'的所有文件以及以'/'为分隔的所有前缀
+    delimiter = None
+    # 标记
+    marker = None
+    ret, eof, info = bucket.list(bucket, prefix, marker, limit, delimiter)
+    print(info)
+
+
 # arg1: file path
 # arg2: key
 # arg3: bucket name
