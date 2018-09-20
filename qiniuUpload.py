@@ -2,7 +2,7 @@ from qiniu import Auth, put_file, etag
 import qiniu.config
 import sys
 
-domain = pf388se7v.bkt.clouddn.com
+domain = "pf388se7v.bkt.clouddn.com"
 access_key = 'vr70Yo2pV5Ffp0YbEgnMjSa_EPgvthnci_VxiRs0'
 secret_key = 'Dx2X_tZg-wCekIbRjwRijf3_C9fmwC7heCkfae5v'
 
@@ -26,6 +26,9 @@ def upload(localfile, key, bucket='document'):
 # arg2: key
 # arg3: bucket name
 if __name__ == "__main__":
-    # link = upload('C:\Users\qiuaikun\Downloads\mytest.jpg', 'mytest.jpg')
-    link = upload(sys.argv[1], sys.argv[2])
-    print(link)
+    if len(sys.argv) == 3:
+        print "333"
+        link = upload(sys.argv[1], sys.argv[2])
+    if len(sys.argv) == 4:
+        print "444"
+        link = upload(sys.argv[1], sys.argv[2], sys.argv[3])
