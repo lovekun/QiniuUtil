@@ -3,10 +3,11 @@
 
 from qiniu import Auth, put_file, etag
 from qiniu import BucketManager
-form qiniu import http
+from qiniu import http
 import qiniu.config
 import sys
 import argparse
+import json
 
 domain = "pf388se7v.bkt.clouddn.com"
 access_key = 'vr70Yo2pV5Ffp0YbEgnMjSa_EPgvthnci_VxiRs0'
@@ -50,13 +51,14 @@ def queryList(bucket_name):
     # 标记
     marker = None
     ret, eof, info = bucket.list(bucket_name, prefix, marker, limit, delimiter)
-    print(info)
+    print(json.dumps(ret, sort_keys=True, indent=4))
 
 def queryBuckets():
     q = Auth(access_key, secret_key)
     # token = q.token("/buckets\n") 
     result = http._get("http://rs.qbox.me/buckets", None, q)
-    print result
+    # print result
+    print result[0]
 
 def cmd():
     args = argparse.ArgumentParser(description = 'QiNiuYun operation tools',epilog = 'Information end ')
