@@ -8,6 +8,7 @@ import qiniu.config
 import sys
 import argparse
 import json
+import requests
 
 domain = "pf388se7v.bkt.clouddn.com"
 access_key = 'vr70Yo2pV5Ffp0YbEgnMjSa_EPgvthnci_VxiRs0'
@@ -45,7 +46,7 @@ def queryList(bucket_name):
     # 前缀
     prefix = None
     # 列举条目
-    limit = 10
+    # limit = 10
     # 列举出除'/'的所有文件以及以'/'为分隔的所有前缀
     delimiter = None
     # 标记
@@ -55,14 +56,31 @@ def queryList(bucket_name):
 
 def queryBuckets():
     q = Auth(access_key, secret_key)
-    # token = q.token("/buckets\n") 
     result = http._get("http://rs.qbox.me/buckets", None, q)
-    # print result
     print result[0]
+
+def queryBucketDomain(bucket_name):
+    q = Auth(access_key, secret_key)
+    result = http._get("http://api.qiniu.com/v6/domain/list?tbl=" + bucket_name, None, q)
+    print result[0][0]
+
+
+def download(bucket, key):
+    q = Auth(access_key, secret_key)
+    result = http._get("http://api.qiniu.com/v6/domain/list?tbl=" + bucket, None, q)
+    base_url = "http://" + result[0][0] + "/" + key
+    # base_url = 'http://domain/key'
+    private_url = q.private_download_url(base_url, expires=3600)
+    print(private_url)
+    r = requests.get(private_url)
+    assert r.status_code == 200
+
+def delete(bucket, key):
+    pass
 
 def cmd():
     args = argparse.ArgumentParser(description = 'QiNiuYun operation tools',epilog = 'Information end ')
-    args.add_argument("-o", "--operation", type = str, dest = "operation", help = "specify operation", default = "upload", choices=["upload", "query", "queryList", "queryBuckets"])
+    args.add_argument("-o", "--operation", type = str, dest = "operation", help = "specify operation", default = "upload", choices=["upload", "query", "queryList", "queryBuckets", "queryBucketDomain", "download"])
     args.add_argument("-f", "--file", type = str, help = "the file to upload")
     args.add_argument("-k", "--key", type = str, help = "the key for the file to upload")
     args.add_argument("-b", "--bucket", type = str, help = "upload the file to specify bucket")
@@ -77,6 +95,10 @@ def cmd():
         queryList(d["bucket"])
     elif d["operation"] == "queryBuckets":
         queryBuckets()
+    elif d["operation"] == "queryBucketDomain":
+        queryBucketDomain(d["bucket"])
+    elif d["operation"] == "download":
+        download(d["bucket"], d["key"])
 
 if __name__=="__main__":
     cmd()
