@@ -35,8 +35,9 @@ def query(bucket_name, key):
     ret, info = bucket.stat(bucket_name, key)
     q = Auth(access_key, secret_key)
     result = http._get("http://api.qiniu.com/v6/domain/list?tbl=" + bucket_name, None, q)
-    print ret
+    # print ret
     print(json.dumps(ret, sort_keys=True, indent=4))
+    print result
     print "http://" + result[0][0] + "/" + key
     # print(info)
 
